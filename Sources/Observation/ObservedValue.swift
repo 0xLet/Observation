@@ -31,6 +31,6 @@ public class ObservedValue<T> {
     public func update(value: T) {
         self.value = value
         
-        _ = didChangeHandler?.run(name: "")
+        _ = didChangeHandler?.run(name: "ObservedValue<\(T.self)>.didChangeHandler")
     }
 }
