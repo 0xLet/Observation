@@ -2,10 +2,7 @@ import XCTest
 @testable import Observation
 
 final class ObservationTests: XCTestCase {
-    @Observed var ov = 4
-    
     func testExample() {
-        
         let observedValue: ObservedValue<Int> = ObservedValue()
         
         observedValue.didChangeHandler = .complete(
@@ -15,7 +12,7 @@ final class ObservationTests: XCTestCase {
                 XCTAssertNotNil(observedValue.value)
             }
         )
-
+        
         observedValue.update(value: 5)
         observedValue.update(value: 15)
         observedValue.update(value: 25)
