@@ -1,3 +1,4 @@
+import E
 import Chain
 
 @propertyWrapper public struct Observed<T> {
@@ -8,29 +9,37 @@ import Chain
             observedValue.didChangeHandler = didChangeHandler
         }
     }
+    
     public var wrappedValue: T {
         didSet {
-            observedValue.update(value: wrappedValue)
+            _ = observedValue.update(value: wrappedValue)
         }
     }
-
+    
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
     }
 }
 
 public class ObservedValue<T> {
-    private(set) var value: T?
+    private(set) public var value: T?
     
+    public var callChain: Chain = .end
     public var didChangeHandler: Chain?
     
     public init(value: T? = nil) {
         self.value = value
+        self.callChain = .complete(
+            .out { [weak self] in
+                self?.didChangeHandler?.run(name: "ObservedValue<\(T.self)>.didChangeHandler") ?? .void
+            }
+        )
     }
     
-    public func update(value: T) {
+    @discardableResult
+    public func update(value: T) -> Variable {
         self.value = value
         
-        _ = didChangeHandler?.run(name: "ObservedValue<\(T.self)>.didChangeHandler")
+        return callChain.run(name: "ObservedValue<\(T.self)>.callChain")
     }
 }
