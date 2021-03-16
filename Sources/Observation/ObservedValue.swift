@@ -22,7 +22,7 @@ import Chain
 }
 
 public class ObservedValue<T> {
-    private(set) var value: T?
+    private(set) public var value: T?
     
     public var callChain: Chain = .end
     public var didChangeHandler: Chain?
